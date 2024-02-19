@@ -1,6 +1,6 @@
 import random
 from tabulate import tabulate
-from typing import List, Tuple
+from typing import Optional, Tuple, Dict
 import numpy as np
 import pandas as pd
 
@@ -11,7 +11,7 @@ class ttt_board:
         self.layout = np.zeros((3, 3))
         self.available_moves_list = [(i, j) for i in range(3) for j in range(3) if self.layout[i, j] != 0]
         self.current_mark = True
-        self.last_move = None
+        self.last_move: Tuple[int, int] | None = None
 
     def reset(self) -> None:
         self.layout = np.zeros((3, 3))
@@ -59,7 +59,7 @@ class ttt_board:
 
     def print_board(self) -> None:
         layout = self.layout
-        b_layout = {}
+        b_layout: Dict[int, Dict[int, str]] = {}
         for i in range(3): 
             b_layout[i] = {}
             for j in range(3):
@@ -71,7 +71,7 @@ class ttt_board:
                     b_layout[i][j] = '_'
  
         table_data = pd.DataFrame(b_layout).values.tolist()
-        table_headers = []
+        table_headers: list[str] = []
         table = tabulate(table_data, headers=table_headers, tablefmt='fancy_grid', showindex='never')
 
         print(table)
@@ -88,11 +88,11 @@ def game_initialize(first_move) -> ttt_board:
         print('Human moves first! Your moves are shown as "X" and mine as "0"')    
     return board
 
-def get_coords_from_human(legal_moves) -> Tuple[int, int]| None:
+def get_coords_from_human(legal_moves) -> Tuple[int, int] | None:
     print('Your turn, please enter integer from 1 to 3 for row or column')
-    i = input('   input row: ')
+    i_index = input('   input row: ')
     try:
-        i = int(i) - 1
+        i = int(i_index) - 1
     except:
         print('Please enter integer values only')
         return None
@@ -101,9 +101,9 @@ def get_coords_from_human(legal_moves) -> Tuple[int, int]| None:
         print('value is out of range 1 to 3, please try again')
         return None
 
-    j = input('   input column: ')
+    j_index = input('   input column: ')
     try:
-        j = int(j) - 1
+        j = int(j_index) - 1
     except:
         print('Please enter integer values only')
         return None
