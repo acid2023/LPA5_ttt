@@ -112,7 +112,7 @@ def get_coords_from_human(legal_moves) -> Tuple[int, int] | None:
         print('Value is out of range 1 to 3, please try again')
         return None
     if (i, j) not in legal_moves:
-        print('Your move is not possible -  the cell is occupyied, pleasetry again')
+        print('Your move is not possible -  the cell is occupyied, please try again')
         return None
     return (i, j)
             
@@ -126,13 +126,13 @@ def game() -> None:
     while True:
         mark = board.current_mark
 
-        if mark == first_move:
-            move = random.choice(legal_moves)
-            print(f'My move is - row {move[0]+1}, column {move[1]+1}')
-        else:               
+        if mark != first_move:
             move = get_coords_from_human(legal_moves)
             if move is None:
                 continue
+        else:               
+            move = random.choice(legal_moves)
+            print(f'My move is - row {move[0]+1}, column {move[1]+1}')
         
         board.place_move(move, mark)
         board.print_board()
