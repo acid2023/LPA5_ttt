@@ -4,39 +4,39 @@ from typing import Optional, Tuple, Dict
 import numpy as np
 import pandas as pd
 
-class ttt_board:
+class TTTBoard:
     def __init__(self, mark: bool) -> None:
         self.comp_char = mark
         self.hum_char = not mark
         self.layout = np.zeros((3, 3))
-        self.available_moves_list = [(i, j) for i in range(3) for j in range(3) if self.layout[i, j] != 0]
+        self.available_moves_list = [(x_coord, y_coord) for x_coord in range(3) for y_coord in range(3) if self.layout[x_coord, y_coord] != 0]
         self.current_mark = True
         self.last_move: Tuple[int, int] | None = None
 
     def reset(self) -> None:
         self.layout = np.zeros((3, 3))
-        self.available_moves_list = [(i, j) for i in range(3) for j in range(3) if self.layout[i,j] == 0]
+        self.available_moves_list = [(x_coord, y_coord) for x_coord in range(3) for y_coord in range(3) if self.layout[x_coord, y_coord] == 0]
         self.current_mark = True
         self.last_move = None
            
     def check_available_move(self, coords: Tuple[int, int]) -> bool:
-        i, j = coords
-        if (i not in [0, 1, 2]) or (j not in [0, 1, 2]):
+        x_coord, y_coord = coords
+        if (x_coord not in [0, 1, 2]) or (y_coord not in [0, 1, 2]):
             return False
-        if self.layout[i, j] != 0:
+        if self.layout[x_coord, y_coord] != 0:
             return False
         return True
 
     def place_move(self, coords: Tuple[int, int], mark: bool) -> None:
         if mark != self.current_mark:
             raise Exception ("Move is not in order")
-        i, j = coords      
+        x_coord, y_coord = coords      
         if self.check_available_move(coords):
             if mark:
-                self.layout[i,j] = 1
+                self.layout[x_coord,y_coord] = 1
             else:
-                self.layout[i,j] = -1
-            self.available_moves_list = [(i, j) for i in range(3) for j in range(3) if self.layout[i,j] ==0]
+                self.layout[x_coord,y_coord] = -1
+            self.available_moves_list = [(x_coord, y_coord) for x_coord in range(3) for y_coord in range(3) if self.layout[x_coord, y_coord] ==0]
             self.current_mark = not self.current_mark
             self.last_move = coords
 
@@ -60,15 +60,15 @@ class ttt_board:
     def print_board(self) -> None:
         layout = self.layout
         b_layout: Dict[int, Dict[int, str]] = {}
-        for i in range(3): 
-            b_layout[i] = {}
-            for j in range(3):
-                if layout[j,i] == 1.0: 
-                    b_layout[i][j] = 'X'
-                elif layout[j,i] == -1.0: 
-                    b_layout[i][j] = '0'
+        for x_coord in range(3): 
+            b_layout[x_coord] = {}
+            for y_coord in range(3):
+                if layout[y_coord, x_coord] == 1.0: 
+                    b_layout[x_coord][y_coord] = 'X'
+                elif layout[y_coord,x_coord] == -1.0: 
+                    b_layout[x_coord][y_coord] = '0'
                 else: 
-                    b_layout[i][j] = '_'
+                    b_layout[x_coord][y_coord] = '_'
  
         table_data = pd.DataFrame(b_layout).values.tolist()
         table_headers: list[str] = []
@@ -76,11 +76,9 @@ class ttt_board:
 
         print(table)
 
-def game_initialize(first_move) -> ttt_board:
-    board = ttt_board(first_move)
+def game_initialize(first_move: bool) -> TTTBoard:
+    board = TTTBoard(first_move)
     board.reset()
-
-
 
     if first_move:
         print('Computer moves first! My moves are shown as "X" and yours as "0"' )
@@ -92,29 +90,29 @@ def get_coords_from_human(legal_moves) -> Tuple[int, int] | None:
     print('Your turn, please enter integer from 1 to 3 for row or column')
     i_index = input('   input row: ')
     try:
-        i = int(i_index) - 1
+        x_coord = int(i_index) - 1
     except:
         print('Please enter integer values only')
         return None
 
-    if i not in [0, 1, 2]:
+    if x_coord not in [0, 1, 2]:
         print('value is out of range 1 to 3, please try again')
         return None
 
     j_index = input('   input column: ')
     try:
-        j = int(j_index) - 1
+        y_coord = int(j_index) - 1
     except:
         print('Please enter integer values only')
         return None
 
-    if j not in [0, 1, 2]:
+    if y_coord not in [0, 1, 2]:
         print('Value is out of range 1 to 3, please try again')
         return None
-    if (i, j) not in legal_moves:
+    if (x_coord, y_coord) not in legal_moves:
         print('Your move is not possible -  the cell is occupyied, please try again')
         return None
-    return (i, j)
+    return (x_coord, y_coord)
             
 def game() -> None: 
     
