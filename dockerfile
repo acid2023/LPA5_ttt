@@ -1,7 +1,8 @@
-FROM ubuntu:24.04
+FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y python3 python3-pip python3-dev python3-tabulate python3-numpy python3-pandas
+RUN apt-get update 
 
+RUN pip install tabulate numpy
 
 WORKDIR /
 
