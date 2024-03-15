@@ -2,7 +2,7 @@ import random
 from tabulate import tabulate
 from typing import Optional, Tuple, Dict
 import numpy as np
-import pandas as pd
+
 
 class TTTBoard:
     def __init__(self, mark: bool) -> None:
@@ -70,7 +70,7 @@ class TTTBoard:
                 else: 
                     b_layout[x_coord][y_coord] = '_'
  
-        table_data = pd.DataFrame(b_layout).values.tolist()
+        table_data = [[b_layout[y_coord][x_coord] for y_coord in range(3)] for x_coord in range(3)]
         table_headers: list[str] = []
         table = tabulate(table_data, headers=table_headers, tablefmt='fancy_grid', showindex='never')
 
